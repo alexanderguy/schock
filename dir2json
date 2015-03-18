@@ -1,0 +1,86 @@
+#!/bin/bash
+
+set -euo pipefail
+shopt -s failglob
+
+IFS=$'\t\n'
+
+indent () {
+    local i="${#DIRSTACK[@]}"
+    while [[ $i -gt 1 ]] ; do echo -n "	" ; i=$(( $i - 1 )) ; done
+    echo -n "$@"
+}
+
+readstr () {
+    # Prevent newline trimming.
+    local val=""
+    while IFS= read -N 1024 -r ; do
+	val+=$REPLY
+    done < "$1"
+    [[ $REPLY ]] && val+=$REPLY
+
+    val=${val//$'\n'/\\n}
+    val=${val//$'\t'/\\t}
+    val=${val//$'\r'/\\r}
+    val=${val//\"/\\\"}
+    val=${val//\'/\\\'}
+    val="\"$val\""
+    echo "$val"
+}
+
+dir () {
+    local val
+    local visible
+    local first
+
+    local isarray=false
+    local keys=()
+
+    pushd $1 > /dev/null
+
+    if [ -e ".array" ] ; then
+	local count=$(cat .array)
+
+	for (( key = 0 ; key < count ; key++ )) ; do
+	    keys+=($key)
+	done
+	isarray=true
+	echo "["
+    else
+	readarray -t keys < <(ls -1)
+	echo "{"
+    fi
+
+    first=true
+    for key in "${keys[@]:+${keys[@]}}" ; do
+	visible=true
+	if [[ -h "$key" ]] ; then
+	    visible=false
+	elif [[ -f "$key" ]] ; then
+	    val=$(readstr "$key")
+	elif [[ -d "$key" ]] ; then
+	    val=$(dir "$key")
+	fi
+
+	if $visible ; then
+	    $first || echo ","
+	    if $isarray ; then
+		indent "${val}"
+	    else
+		indent \"$key\": "${val}"
+	    fi
+	    first=false
+	fi
+    done
+
+    $first || echo
+    popd > /dev/null
+    if $isarray ; then 
+	indent "]"
+    else
+	indent "}"
+    fi
+}
+
+dir $1
+echo

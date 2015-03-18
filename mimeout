@@ -1,0 +1,39 @@
+#!/usr/bin/perl -w
+require 5.001;
+
+use strict;
+
+use MIME::Parser;
+use Getopt::Std;
+
+sub dump_entity {
+    my $ent = shift;
+    my @parts = $ent->parts;
+
+    if (@parts) {
+	map { dump_entity($_) } @parts;
+    } else {
+	my $name = $ent->head->get('Content-Disposition', 0);
+	$name =~ s/.*name=\"([^\"]+).*\s*/$1/;
+	$name =~ s/\t/ /g;
+
+	open(my $fh, '>', $ent->bodyhandle->path . ".type");
+	print $fh $ent->head->mime_type;
+	close $fh;
+
+	print $name, "\t", $ent->bodyhandle->path, "\n";
+    }
+}
+
+my $entity;
+
+open FILE, "-";
+
+my $parser = new MIME::Parser;
+mkdir "form";
+$parser->output_dir("form");
+$entity = $parser->read(\*FILE);
+close FILE;
+dump_entity($entity) if $entity;
+exit 0;
+
