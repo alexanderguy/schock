@@ -3,6 +3,8 @@ declare -a _ROUTE_URI_RES
 declare -a _ROUTE_URI_METHODS
 declare -a _ROUTE_URI_HANDLERS
 
+_ALREADY_SENT_RESPONSE=false
+
 s::route::bind::uri () {
     # XXX - Is this explicit beginning and ending the correct choice?
     local pat="^$1$" ; shift

@@ -1,4 +1,5 @@
 _bail () {
+    log::info "bailing..."
     exit 0
 }
 
@@ -27,6 +28,8 @@ s::run () {
 }
 
 s::response::finish () {
+    $_ALREADY_SENT_RESPONSE && return
+
     log::info "response finished"
     for h in "${!_HEADERS[@]}" ; do
 	log::info "Header $h: ${_HEADERS[$h]}"
