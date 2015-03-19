@@ -1,0 +1,33 @@
+#!/bin/bash
+
+#
+# Hello, World! in schock
+#
+
+# Point ourselves at the code.
+SCHOCKDIR=$(dirname $0)/..
+
+# Include all of the basics.
+. $SCHOCKDIR/kitchensink.bash
+
+# Define an endpoint.
+hw () {
+    success 200 "Hello, World!"
+}
+
+# Bind the endpoint into allowed URIs.
+s::route::bind::uri "/hw" "GET" hw
+
+s::run "$@"
+
+#
+# To run me, do something like the following:
+#
+# 1) Point a CGI-capable server at me.
+#
+# or
+#
+# 2) Run me from the commandline:
+#
+# ./helloworld GET /hw
+#
