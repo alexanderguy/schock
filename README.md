@@ -62,7 +62,7 @@ Questions & Answers
 
 * Isn't this a dumb idea?
 
-    No James, it lets you prototype system services faster really quickly.
+    Well, yes.
 
 * But what about that one time I was using bash and had a quoting/globbing/whitespace/$OTHER problem?
 
