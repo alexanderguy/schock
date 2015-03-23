@@ -10,10 +10,10 @@ Introduction
 
 schock is a web services framework written (mostly) in bash.  It was built to provide rapid
 development, experimentation, and testing with minimal effort.  Depending on the code you
-plug into it, it's should be reasonably secure, and fast enough for development work.
+plug into it, it should be reasonably secure, and fast enough for development work.
 
 Use this in production at your own peril.  It's the result of a bunch of hacking over a couple of days,
-and probably has real problems.  The interfaces definitely isn't stable.
+and probably has real problems.  The interfaces definitely aren't stable.
 
 The main features include:
 
