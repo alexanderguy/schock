@@ -53,12 +53,9 @@ Testing a URI endpoint at the command-line:
     DEBUG: handler is 'hw /hw'
     DEBUG: executing handler with args '/hw'
     {
-		"message": "Hello, World!"
+        "message": "Hello, World!"
     }
-    INFO: response finished
-    INFO: Header Content-Type: text/plain
-    INFO: Header Status: 200
-
+    INFO: bailing...
 
 Questions & Answers
 -------------------
