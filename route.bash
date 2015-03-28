@@ -61,7 +61,7 @@ s::route::exec-handler () {
 _S_ROUTE_METHOD=""
 
 s::method () {
-    [[ -z "$_S_ROUTE_METHOD" ]] || panic "method is blank, how did that happen?"
+    [[ -z "$_S_ROUTE_METHOD" ]] && panic "method is blank, how did that happen?"
     echo "$_S_ROUTE_METHOD"
 }
 
@@ -69,6 +69,8 @@ s::route::dispatch () {
     local method=$1 ; shift
     local uri=$1; shift
     local args=()
+
+    _S_ROUTE_METHOD=$method
 
     local handler
     res=0
