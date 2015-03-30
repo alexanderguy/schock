@@ -34,5 +34,7 @@ s::response::finish () {
     for h in "${!_HEADERS[@]}" ; do
 	log::info "Header $h: ${_HEADERS[$h]}"
     done
+    _ALREADY_SENT_RESPONSE=true
 }
 
+EXIT_FUNCS+=(s::response::finish)

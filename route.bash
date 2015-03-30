@@ -3,8 +3,6 @@ declare -a _ROUTE_URI_RES
 declare -a _ROUTE_URI_METHODS
 declare -a _ROUTE_URI_HANDLERS
 
-_ALREADY_SENT_RESPONSE=false
-
 s::route::bind::uri () {
     # XXX - Is this explicit beginning and ending the correct choice?
     local pat="^$1$" ; shift
@@ -43,19 +41,15 @@ s::route::exec-handler () {
     log::debug "executing handler with args '$@'"
     local t=$(type $handler | head -1) || panic "unknown handler '$handler'"
 
-    (
-	case $t in
-	    *is\ a\ function)
-		$handler "$@"
-		;;
-	    *)
-		set -- "$@"
-	        . $handler
-		;;
-	esac
-
-	s::response::finish
-    ) && _ALREADY_SENT_RESPONSE=true
+    case $t in
+	*is\ a\ function)
+	    $handler "$@"
+	    ;;
+	*)
+	    set -- "$@"
+	    . $handler
+	    ;;
+    esac
 }
 
 _S_ROUTE_METHOD=""
@@ -81,11 +75,6 @@ s::route::dispatch () {
 	0)
 	    readarray -t args < <(echo "$handler")
 	    log::debug "handler is '$handler'"
-
-	    # Once we start running the handler, we need to make
-	    # sure it's finished off (e.g. headers sent)
-	    # by the time we exit.
-	    _EXIT_FUNCS+=(s::response::finish)
 	    s::route::exec-handler "${args[@]}"
 	    ;;
 	254)

@@ -5,7 +5,7 @@ _bail () {
 
     exit 1
 }
-trap 's::response::finish' EXIT
+_EXIT_FUNCS+=(s::response::finish)
 
 _ALREADY_SENT_RESPONSE=false
 
@@ -53,6 +53,7 @@ EOF
 	done
 	echo
 	$_REDIRECT && cat $_TEMPDIR/stdout
+	_ALREADY_SENT_RESPONSE=true
     fi
 
     $_DEBUG && return
