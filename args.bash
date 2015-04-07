@@ -15,7 +15,8 @@ EOF
 	    ) > $_TEMPDIR/mimebits
 	    while IFS=$'\t' read name fname ; do
 		val="$(cat $_TEMPDIR/$fname)"
-		_QUERY_PARAMS[$name]="$(cat $_TEMPDIR/$fname)"
+		log::debug "pulling field from form: $fname -> $name"
+		_QUERY_PARAMS[$name]=$val
 	    done < <(cd $_TEMPDIR && rm -rf form && $SCHOCKDIR/mimeout < mimebits)
 
 	    rm $_TEMPDIR/mimebits
