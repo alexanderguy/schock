@@ -14,7 +14,7 @@ sub dump_entity {
 	map { dump_entity($_) } @parts;
     } else {
 	my $name = $ent->head->get('Content-Disposition', 0);
-	$name =~ s/.*name=\"([^\"]+).*\s*/$1/;
+	$name =~ s/.*[:;]\s*name=\"([^\"]+).*\s*/$1/;
 	$name =~ s/\t/ /g;
 
 	open(my $fh, '>', $ent->bodyhandle->path . ".type");
