@@ -63,14 +63,6 @@ EOF
     fi
 }
 
-if $_DEBUG ; then
-    _TEMPDIR=$TOP/debug_output
-    mkdir -p $_TEMPDIR
-    rm -rf $_TEMPDIR/*
-else
-    _TEMPDIR=$(mktemp -d)
-fi
-
 exec {_LOGFD}>>webapp.log
 
 _REDIRECT=true
