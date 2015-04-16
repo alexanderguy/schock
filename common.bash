@@ -4,6 +4,7 @@
 set -uo pipefail
 set -o privileged
 set -o noglob
+set -o errtrace
 set -e
 IFS=$'\n'
 
@@ -11,7 +12,7 @@ _err_report () {
     err_status=$1
     trap - ERR
 
-    status 503
+    status 500
     cat 1>&2 <<EOF
 problem executing commands:
 EOF
