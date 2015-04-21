@@ -1,3 +1,6 @@
+
+declare -A _FORM_FILES
+
 s::process-body () {
     local contenttype=$1 ; shift
     local contentlength=$1 ; shift
@@ -14,9 +17,8 @@ EOF
 		cat $_TEMPDIR/body
 	    ) > $_TEMPDIR/mimebits
 	    while IFS=$'\t' read name fname ; do
-		val="$(cat $_TEMPDIR/$fname)"
 		log::debug "pulling field from form: $fname -> $name"
-		_QUERY_PARAMS[$name]=$val
+		_FORM_FILES[$name]=$_TEMPDIR/$fname
 	    done < <(cd $_TEMPDIR && rm -rf form && $SCHOCKDIR/mimeout < mimebits)
 
 	    rm $_TEMPDIR/mimebits
@@ -29,18 +31,25 @@ EOF
 
 declare -A _QUERY_PARAMS
 
-s::param::exists () {
-    for p in "$@" ; do
-	query_param $p || return 1
-    done
+s::param () {
+    if [[ -n "${_QUERY_PARAMS[$1]-}" ]] ; then
+	echo "${_QUERY_PARAMS[$1]-}"
+	return 0
+    elif [[ -n "${_FORM_FILES[$1]-}" ]] ; then
+	cat ${_FORM_FILES[$1]}
+	return 0
+    fi
 
-    return 0
+    return 1
 }
 
-s::param () {
-    [ "${_QUERY_PARAMS[$1]-}" ] || return 1
-    echo "${_QUERY_PARAMS[$1]-}"
-    return 0
+s::param::file () {
+    if [[ -n "${_FORM_FILES[$1]-}" ]] ; then
+	echo ${_FORM_FILES[$1]}
+	return 0
+    fi
+
+    return 1
 }
 
 s::param::dump () {
@@ -48,5 +57,9 @@ s::param::dump () {
 
     for k in "${!_QUERY_PARAMS[@]}" ; do
 	log::debug "$k: ${_QUERY_PARAMS[$k]}"
+    done
+
+    for k in "${!_FORM_FILES[@]}" ; do
+	log::debug "$k: ${_FORM_FILES[$k]}"
     done
 }
