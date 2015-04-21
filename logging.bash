@@ -2,9 +2,11 @@
 _LOGFD=2
 
 log::cmd () {
+    local ret
+
+    ret=0
     log::info "running command: $*"
-    "$@" >&${_LOGFD} 2>&1
-    local ret=$?
+    "$@" >&${_LOGFD} 2>&1 || ret=$?
 
     log::debug "return value was $ret"
     return $ret
