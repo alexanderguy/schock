@@ -5,8 +5,7 @@ s::process-body () {
     local contenttype=$1 ; shift
     local contentlength=$1 ; shift
 
-    RESULT=$(dd bs=$contentlength count=1 of=$_TEMPDIR/body 2>&1) || panic "failed to read body $RESULT"
-
+    log::cmd dd bs=1 count=$contentlength of=$_TEMPDIR/body || panic "failed to read body $RESULT"
     case $contenttype in
 	multipart/form-data*)
 	    (
