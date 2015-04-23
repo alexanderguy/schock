@@ -23,7 +23,7 @@ EOF
 	    rm $_TEMPDIR/mimebits
 	    ;;
 	*)
-	    error 503 "unknown post content type."
+	    error 400 "unknown post content type '$contenttype'."
 	    ;;
     esac
 }
