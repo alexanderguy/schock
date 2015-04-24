@@ -26,6 +26,10 @@ s::response::finish () {
 Content-Type: text/plain
 Status: 500 Internal Server Error
 
+EOF
+
+	if $_DEBUG ; then
+	    cat <<EOF
 Internal Server Error
 =====================
 
@@ -35,18 +39,37 @@ HEADERS
 =======
 EOF
 
-	for h in "${!_HEADERS[@]}" ; do
-	    echo "$h: ${_HEADERS[$h]}"
-	done
-	echo
+	    for h in "${!_HEADERS[@]}" ; do
+		echo "$h: ${_HEADERS[$h]}"
+	    done
+	    echo
 
-	echo STDOUT
-	echo ======
-	cat $_TEMPDIR/stdout
-	echo
-	echo STDERR
-	echo ======
-	cat $_TEMPDIR/stderr
+	    echo STDOUT
+	    echo ======
+	    cat $_TEMPDIR/stdout
+	    echo
+	    echo STDERR
+	    echo ======
+	    cat $_TEMPDIR/stderr
+	fi
+
+	log::error "Internal server error:"
+
+	log::error Headers:
+	for h in "${!_HEADERS[@]}" ; do
+	    log::error "$h: ${_HEADERS[$h]}"
+	done
+
+	log::error "stdout:"
+	for i in $(cat $_TEMPDIR/stdout) ; do
+	    log::error $i
+	done
+
+	log::error "stderr:"
+	for i in $(cat $_TEMPDIR/stderr) ; do
+	    log::error $i
+	done
+
     elif ! $_ALREADY_SENT_RESPONSE ; then
 	for h in "${!_HEADERS[@]}" ; do
 	    echo "$h: ${_HEADERS[$h]}"
