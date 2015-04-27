@@ -4,8 +4,12 @@
 declare -A _HEADERS
 
 header () {
-    if [ "${2:-}" ] ; then 
-	_HEADERS["$1"]="$2"
+    local header
+    header=$1 ; shift
+
+    if [ "${header:-}" ] ; then
+	# echo wil do a nice job putting everything on one line
+	_HEADERS[$header]="$(echo $*)"
     else
 	echo ${_HEADERS["$1"]}
     fi
@@ -13,7 +17,7 @@ header () {
 
 status () {
     [ "${1:-}" ] || panic "status requires an argument"
-    header Status $1
+    header Status "$@"
 }
 
 content-type () {
@@ -23,7 +27,7 @@ content-type () {
 }
 
 success () {
-    status $1
+    status "$@"
     s::comp::reset
     if [[ -n "${2:-}" ]] ; then
 	s::comp::string "/message" "$2"
@@ -36,7 +40,7 @@ success () {
 }
 
 error () {
-    status $1
+    status "$@"
     content-type "application/json"
 
     if [[ -n "${2:-}" ]] ; then
