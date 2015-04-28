@@ -13,6 +13,7 @@ log::cmd () {
 }
 
 log::debug () {
+    $_DEBUG || return 0
     echo DEBUG: $* >&${_LOGFD}
     true
 }
