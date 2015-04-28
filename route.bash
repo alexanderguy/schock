@@ -11,7 +11,7 @@ s::route::bind::uri () {
 
     pat="${pat//\[:pathseg:\]/[^\/]+}"
 
-    log::info "binding in route '$pat' '$methods' '$handler'"
+    log::debug "binding in route '$pat' '$methods' '$handler'"
 
     _ROUTE_URI_RES+=($pat)
     _ROUTE_URI_METHODS+=($methods)
@@ -20,7 +20,7 @@ s::route::bind::uri () {
 
 s::route::bind::dir () {
     local dir=$1 ; shift
-    log::info "binding directory '$dir'..."
+    log::debug "binding directory '$dir'..."
 
     local path
     while read path ; do 
