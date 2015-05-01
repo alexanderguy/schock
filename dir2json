@@ -23,7 +23,6 @@ readstr () {
     val=${val//$'\t'/\\t}
     val=${val//$'\r'/\\r}
     val=${val//\"/\\\"}
-    val=${val//\'/\\\'}
     val="\"$val\""
     echo "$val"
 }
