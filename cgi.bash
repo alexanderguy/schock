@@ -71,6 +71,9 @@ EOF
 	done
 
     elif ! $_ALREADY_SENT_RESPONSE ; then
+	echo Status: ${_HEADERS[Status]}
+	unset _HEADERS[Status]
+
 	for h in "${!_HEADERS[@]}" ; do
 	    echo "$h: ${_HEADERS[$h]}"
 	done
